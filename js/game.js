@@ -73,9 +73,10 @@ function update() {
 	// Game over
 	if( curAns === undefined || curQues === undefined) {
 		clearInterval(refreshInterval);
-		$("#loadingText").text("You win! Final score: " + score);
+		document.getElementById("loadingText").innerHTML = ("You win!<br>Final score: " + score + "<br><a onclick=''>Restart</a>   <a href='index.html'>New game</a>");
 		canvasElement.hide();
 		loadingDiv.show();
+		return;
 	}
 }
 
@@ -166,11 +167,14 @@ function movePlayer() {
 }
 
 function prep() {
-	//clearInterval(refreshInterval);
+	clearInterval(refreshInterval);
 	canvasElement.hide();
 	questionDiv.hide();
 	loadingDiv.show();
-	setTimeout(function(){ loadingDiv.hide(); canvasElement.show(); questionDiv.innerHTML = "Question: " + curQues; questionDiv.show(); }, 2000);
+	setTimeout(function(){ loadingDiv.hide(); canvasElement.show(); questionDiv.innerHTML = "Question: " + curQues; questionDiv.show(); var refreshInterval = setInterval(function() {
+  update();
+  draw();
+}, 1000/FPS); }, 2000);
 }
 
 function getRandomInt(min, max) {
