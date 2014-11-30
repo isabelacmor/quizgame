@@ -4,18 +4,21 @@ var answers = [];
 var curQ = "";
 var curA = "";
 var qPos = 0;
+var numAttempts = 1;
 
-var GAME_WIDTH = 800;
+var GAME_WIDTH = 750;
 var GAME_HEIGHT = 600;
 var CORRECT_POINTS = 50;
 var INCORRECT_POINTS = -15;
+var NUM_STARS = 6;
 
 var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
 function preload() {
 
-    game.load.image('sky', 'assets/sky.png');
-    game.load.image('ground', 'assets/platform.png');
+    game.load.image('sky', 'assets/spacebackground.png');
+    game.load.image('ground', 'assets/stoneplatform.png');
+    game.load.image('shortground', 'assets/shortstoneplatform.png');
     game.load.image('star1', 'assets/star1.png');
     game.load.image('star2', 'assets/star2.png');
     game.load.image('star3', 'assets/star3.png');
@@ -25,7 +28,7 @@ function preload() {
     game.load.spritesheet('spaceman', 'assets/spaceman.png', 32, 48);
     
     // Load all questions and answers
-    for(var i = 0; i < data.length; i++) {
+    for(var i = 0; i < (data.length > NUM_STARS? NUM_STARS : data.length); i++) {
         questions[i] = data.key(i);
         answers[i] = data.getItem(data.key(i));
     }
@@ -41,14 +44,23 @@ function preload() {
 var player;
 var platforms;
 var cursors;
+var spaceKey;
 
 var stars;
 var score = 0;
 var scoreText;
+var transText;
+var middleText;
 
 function removeAllStars() {    
     while(stars.length != 0){
        stars.getAt(0).destroy();
+    }
+}
+
+function removeAllPlatforms() {
+    while(platforms.length != 0) {
+        platforms.getAt(0).destroy();   
     }
 }
 
@@ -92,27 +104,8 @@ function create() {
     //  A simple background for our game
     game.add.sprite(0, 0, 'sky');
 
-    //  The platforms group contains the ground and the 2 ledges we can jump on
-    platforms = game.add.group();
-
-    //  We will enable physics for any object that is created in this group
-    platforms.enableBody = true;
-
-    // Here we create the ground.
-    var ground = platforms.create(0, game.world.height - 64, 'ground');
-
-    //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-    ground.scale.setTo(2, 2);
-
-    //  This stops it from falling away when you jump on it
-    ground.body.immovable = true;
-
     //  Now let's create two ledges
-    var ledge = platforms.create(400, 400, 'ground');
-    ledge.body.immovable = true;
-
-    ledge = platforms.create(-150, 250, 'ground');
-    ledge.body.immovable = true;
+    createPlatforms();
 
     // The player and its settings
     player = game.add.sprite(32, game.world.height - 150, 'spaceman');
@@ -139,10 +132,17 @@ function create() {
     setQuestion();
 
     //  The score
-    scoreText = game.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#000' });
+    scoreText = game.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#FFF' });
+    
+    //  The transition between levels (# attempts)
+    transText = game.add.text(5, 45, '', { fontSize: '12px', fill: '#FFF' });
+    
+    //  Game over
+    middleText = game.add.text(300, 300, '', { fontSize: '40px', fill: '#FFF' });
 
     //  Our controls.
     cursors = game.input.keyboard.createCursorKeys();    
+    spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 }
 
 function update() {
@@ -156,8 +156,17 @@ function update() {
 
     //  Reset the players velocity (movement)
     player.body.velocity.x = 0;
-
-    if (cursors.left.isDown)
+    player.body.acceleration.x = 0;
+    
+    if (spaceKey.isDown && cursors.left.isDown) {
+        player.body.velocity.x = -300; 
+        player.animations.play('left');
+    }
+    else if(spaceKey.isDown && cursors.right.isDown) {
+        player.body.velocity.x = 300;
+        player.animations.play('right');
+    }
+    else if (cursors.left.isDown)
     {
         //  Move to the left
         player.body.velocity.x = -150;
@@ -182,7 +191,14 @@ function update() {
     //  Allow the player to jump if they are touching the ground.
     if (cursors.up.isDown && player.body.touching.down)
     {
-        player.body.velocity.y = -350;
+        if(spaceKey.isDown) {
+            player.body.velocity.y = -450;
+        } else {
+            player.body.velocity.y = -350;
+        }
+    }
+    else if(cursors.down.isDown && !player.body.touching.down) {
+        player.body.velocity.y = 200;
     }
     
     // Check if last answer so we can end the game
@@ -194,14 +210,57 @@ function update() {
 
 }
 
+function createPlatforms() {
+    //  The platforms group contains the ground and the 2 ledges we can jump on
+    platforms = game.add.group();
+
+    //  We will enable physics for any object that is created in this group
+    platforms.enableBody = true;
+
+    // Here we create the ground.
+    var ground = platforms.create(0, game.world.height - 64, 'ground');
+
+    //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
+    ground.scale.setTo(2, 2);
+
+    //  This stops it from falling away when you jump on it
+    ground.body.immovable = true;
+    
+    var bX = getRandomInt(0, GAME_WIDTH-350);
+    var bY = getRandomInt(GAME_HEIGHT-150,(GAME_HEIGHT/2)+40);
+    
+    var tX = getRandomInt(0, GAME_WIDTH-350);
+    var tY = getRandomInt(50, GAME_HEIGHT/2);
+    
+    var sX = (bX+200 > GAME_WIDTH/2) ? getRandomInt(0, GAME_WIDTH/2 - 200) : getRandomInt(GAME_WIDTH/2, GAME_WIDTH-200);
+    // Somewhere in the midsection
+    var sY = getRandomInt(tY+150, bY-150);
+    
+    // Bottom half ledge
+    var ledge = platforms.create(bX, bY, 'ground');
+    ledge.body.immovable = true;
+
+    // Top half ledge
+    ledge = platforms.create(tX, tY, 'ground');
+    ledge.body.immovable = true;
+    
+    // Short ledge
+    ledge = platforms.create(sX, sY, 'shortground');
+    ledge.body.immovable = true;
+}
+
 function restartGame() {
     qPos = 0;
     curQ = questions[qPos];
     curA = answers[qPos];
     score = 0;
     scoreText.text = 'Score: ' + score;
+    middleText.text = '';
+    transText.text = '';
     
     setQuestion();
+    removeAllPlatforms();
+    createPlatforms();
     removeAllStars();
     createAllStars();
 }
@@ -209,29 +268,35 @@ function restartGame() {
 function endGame() {
     setQuestion();
     removeAllStars();
+    middleText.text = 'Game over!'
 }
 
 function collectStar (player, star) {    
     // Removes the star from the screen
-    star.kill();
+    // Checking for null because of some weird difficult to repro bug...doesn't hurt to check
+    if(star != null) star.kill();
     
     // Process a correct answer
     if(star.answer === curA) {
         score += CORRECT_POINTS;
         qPos++;
         
-        // Shows new question
+        // Get new question
         curQ = questions[qPos];
         curA = answers[qPos];
         
-        // Shows new set of stars (answers)
+        // Shows transition and new set of stars (answers)
         removeAllStars();
-        createAllStars();
         
+        transText.text = transText.text + ' ' + numAttempts;
+        
+        createAllStars();
         setQuestion();
+        numAttempts = 1;
         
     } else {
         score += INCORRECT_POINTS;   
+        numAttempts++;
     }
     
     scoreText.text = 'Score: ' + score;
@@ -240,7 +305,7 @@ function collectStar (player, star) {
 
 function setQuestion() {
     if(curQ === undefined){
-        document.getElementById("question").innerHTML = "You win!";   
+        document.getElementById("question").innerHTML = "";   
     } else {
         document.getElementById("question").innerHTML = "Question: " + curQ;    
     }
