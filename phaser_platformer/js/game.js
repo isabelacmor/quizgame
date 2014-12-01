@@ -287,10 +287,14 @@ function collectStar (player, star) {
         
         // Shows transition and new set of stars (answers)
         removeAllStars();
-        
-        transText.text = transText.text + ' ' + numAttempts;
+        removeAllPlatforms();
         
         createAllStars();
+        
+        createPlatforms();
+        
+        transText.text = transText.text + ' ' + (numAttempts == 1 ? '✓' : '✗');
+        
         setQuestion();
         numAttempts = 1;
         

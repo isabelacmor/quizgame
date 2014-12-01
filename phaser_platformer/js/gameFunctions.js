@@ -21,6 +21,26 @@ function loadGame(data) {
 		storage.setItem('' + q, '' + a);
 		console.log(q + " -> " + a);
 	}
+   showData();
+}
+
+function showData() {
+    var table = document.getElementById("preview");
+    table.innerHTML = "";
+    var storage = window.localStorage;
+    var row = table.insertRow(0);
+    var labelQ = row.insertCell(0);
+    var labelA = row.insertCell(1);
+    labelQ.innerHTML = "Question";
+    labelA.innerHTML = "Answer";
+    
+    for(var i = 0; i < storage.length; i++) {
+        row = table.insertRow(i+1);
+        var q = row.insertCell(0);
+        var a = row.insertCell(1);
+        q.innerHTML = storage.key(i);
+        a.innerHTML = storage.getItem(storage.key(i));
+    }
 }
 
 // Parse a file as soon as it's loaded

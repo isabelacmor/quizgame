@@ -1,7 +1,87 @@
+body {
+    font-family: Helvetica;
+}
+
+#main {
+    background-image: url("assets/spacebackground.png");
+}
+
+#title {
+    color: #FFFFFF;
+    text-align: center;
+    margin-top: 100px;
+}
+
+#instructions {
+    color: #FFFFFF;
+    text-align: center;
+    margin-top: 75px;
+}
+
+#uploads {
+    width: 160px;
+    margin: 0 auto;
+}
+
+#csv-file {
+    color: #FFFFFF;
+}
+
+.btn {
+     background: #FFFFFF;
+  background-image: -webkit-linear-gradient(top, #FFFFFF, #FFFFFF);
+  background-image: -moz-linear-gradient(top, #FFFFFF, #FFFFFF);
+  background-image: -ms-linear-gradient(top, #FFFFFF, #FFFFFF);
+  background-image: -o-linear-gradient(top, #FFFFFF, #FFFFFF);
+  background-image: linear-gradient(to bottom, #FFFFFF, #FFFFFF);
+  -webkit-border-radius: 8;
+  -moz-border-radius: 8;
+  border-radius: 8px;
+  font-family: Arial;
+  color: #0a4973;
+  font-size: 20px;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+    width: 45px;
+    margin: 0 auto;
+    margin-top: 50px;
+}
+
+.btn a {
+    text-decoration: none;
+    color: #0a4973;
+}
+
 #answerChoices {
     width: 500px;
 }
 
 .text {
     padding: 0 10px 0 5px;
+}
+
+#previewDiv {
+    width: 300px;
+    margin: 0 auto;
+    margin-top: 50px;
+}
+
+table {
+    border: 1px solid #D4D4D4;
+}
+
+td {
+    padding: 10px 15px 15px 10px;
+}
+
+tr:nth-child(odd) {
+    background-color: #D4D4D4;
+}
+
+tr:nth-child(even) {
+    background-color: #FFFFFF;
+}
+
+tr:first-child {
+    font-weight: bold;
 }

@@ -1,16 +1,26 @@
 <html>
 <head>
 	<title> Quiz Game! </title>
+    <link rel="stylesheet" type="text/css" href="style.css">
 	<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
 	<script type="text/javascript" src="js/papaparse.min.js"></script>
 	<script type="text/javascript" src="js/gameFunctions.js"></script>
 </head>
 <body id="main">
-	<h1>Quiz Game!</h1>
-	<p> THIS IS A STUPID GAME. PLEASE HELP :( </p>
+	<h1 id="title">Quiz Game!</h1>
+	<p id="instructions">Load a CSV file in question,answer format to begin</p>
 
-	<input type="file" id="csv-file" name="files"/>
-	<a href="game.html">Play!</a>
+    <div id="uploads">
+        <input type="file" id="csv-file" name="files"/>
+    </div>
+    
+    <div class="btn">
+        <a href="game.html">Play!</a>
+    </div>
+    
+    <div id="previewDiv">
+        <table id="preview" style="width: 300px;margin-top: 20px"></table>
+    </div>
 
 </body>
 </html>
