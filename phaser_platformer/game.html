@@ -3,23 +3,51 @@
 
 <head>  
     <meta charset="utf-8" />
-    <title> Platformer </title>
+    <title> Space Quest </title>
 
     <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="styesheet" href="popup.css">
     
     <script type="text/javascript" src="js/phaser.min.js"></script>
     <script type="text/javascript" src="js/game.js"></script>
-    <script type="text/javascript" src="js/play.js"></script>
 </head>
 
 <body>
+    <div id="dialog" title="Basic dialog">
+      <img src="assets/controls.png" />
+    </div>
+    
+    <div id="gameArea">
+        <div id="rhs">
+            <div id="questionArea">
+                <p id="question"></p>
+            </div>
 
-    <a onclick="restartGame();">Restart</a>
-    <a href="index.html">New Game</a>
+            <div id="answerArea">
+                <p id="answerChoices"></p>
+            </div>
+        </div>
+        
+        <div id="gameOptions">
+            <a onclick="restartGame();">Restart</a>
+            <a href="index.html">New Game</a>
+            <a id="#popup" onclick="toggleVisibility('dialog');">Controls</a>
+        </div>
+
+        <div id="gameDiv"></div>
+    </div>
     
-    <p id="question"></p>
-    
-    <p id="answerChoices"></p>
-    
-</body>  
+</body>
+<script>
+    function toggleVisibility(divid) {
+        if (divid==="dialog"){
+            var dialog = document.getElementById("dialog");
+            if(dialog.style.visibility === "visible") {
+                dialog.style.visibility = "hidden";
+            } else {
+                dialog.style.visibility = "visible";
+            }
+        }
+    }
+</script>
 </html>  

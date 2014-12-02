@@ -1,5 +1,7 @@
 body {
     font-family: Helvetica;
+    background-image: url("assets/spacebackground.png");
+    color: #FFFFFF;
 }
 
 #main {
@@ -27,21 +29,16 @@ body {
     color: #FFFFFF;
 }
 
-.btn {
+.btn, #gameOptions a, #gameOptions button {
      background: #FFFFFF;
-  background-image: -webkit-linear-gradient(top, #FFFFFF, #FFFFFF);
-  background-image: -moz-linear-gradient(top, #FFFFFF, #FFFFFF);
-  background-image: -ms-linear-gradient(top, #FFFFFF, #FFFFFF);
-  background-image: -o-linear-gradient(top, #FFFFFF, #FFFFFF);
-  background-image: linear-gradient(to bottom, #FFFFFF, #FFFFFF);
-  -webkit-border-radius: 8;
-  -moz-border-radius: 8;
-  border-radius: 8px;
-  font-family: Arial;
-  color: #0a4973;
-  font-size: 20px;
-  padding: 10px 20px 10px 20px;
-  text-decoration: none;
+    -webkit-border-radius: 8;
+    -moz-border-radius: 8;
+    border-radius: 8px;
+    font-family: Arial;
+    color: #0a4973;
+    font-size: 20px;
+    padding: 10px 20px 10px 20px;
+    text-decoration: none;
     width: 45px;
     margin: 0 auto;
     margin-top: 50px;
@@ -52,12 +49,53 @@ body {
     color: #0a4973;
 }
 
+#rhs {
+    width: 200px;
+    display: block;
+    float: right;
+    margin-top: 35px;
+}
+
+#questionArea {
+    height: 200px;
+    width: 200p;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #FFFFFF;
+}
+
+#answerArea {
+    height: 300px;
+    width: 200px
+}
+
 #answerChoices {
-    width: 500px;
+    height: 300px;
+    overflow-y: scroll;
+}
+
+#question {
+    height: 200px;
+    overflow-y: scroll;
+}
+
+.answer {
+    margin-top: 20px;
 }
 
 .text {
     padding: 0 10px 0 5px;
+}
+
+#gameDiv {
+    margin-top: 30px;
+    width: 950px;
+    border: 1px solid #FFFFFF;
+}
+
+#gameArea {
+    width: 1200px;
+    margin: 0 auto;
+    margin-top: 50px;
 }
 
 #previewDiv {
@@ -80,8 +118,24 @@ tr:nth-child(odd) {
 
 tr:nth-child(even) {
     background-color: #FFFFFF;
+    color: #000000;
 }
 
 tr:first-child {
     font-weight: bold;
+}
+
+#dialog {
+    visibility: hidden;
+    background: white;
+    color: black;
+    width: 400px;
+    position: absolute;
+    margin-top: 20px;
+    margin-left: 365px;
+    padding: 10px;
+}
+
+#dialog img {
+    margin-left: 35px;
 }

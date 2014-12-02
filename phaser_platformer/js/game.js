@@ -6,13 +6,14 @@ var curA = "";
 var qPos = 0;
 var numAttempts = 1;
 
-var GAME_WIDTH = 750;
+var GAME_WIDTH = 950;
 var GAME_HEIGHT = 600;
 var CORRECT_POINTS = 50;
 var INCORRECT_POINTS = -15;
-var NUM_STARS = 6;
+var NUM_STARS = 12;
 
-var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+/* width, height, renderer, parent, state, transparent */
+var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, 'gameDiv', { preload: preload, create: create, update: update }, true);
 
 function preload() {
 
@@ -25,6 +26,12 @@ function preload() {
     game.load.image('star4', 'assets/star4.png');
     game.load.image('star5', 'assets/star5.png');
     game.load.image('star6', 'assets/star6.png');
+    game.load.image('star7', 'assets/star7.png');
+    game.load.image('star8', 'assets/star8.png');
+    game.load.image('star9', 'assets/star9.png');
+    game.load.image('star10', 'assets/star10.png');
+    game.load.image('star11', 'assets/star11.png');
+    game.load.image('star12', 'assets/star12.png');
     game.load.spritesheet('spaceman', 'assets/spaceman.png', 32, 48);
     
     // Load all questions and answers
@@ -69,7 +76,7 @@ function createAllStars() {
     {
         
         //  Create a star inside of the 'stars' group
-        var star = stars.create(getRandomInt(0, GAME_WIDTH-50), 0, ('star' + (i+1)));
+        var star = stars.create(getRandomInt(40, GAME_WIDTH-50), 0, ('star' + (i+1)));
 
         //  Let gravity do its thing
         star.body.gravity.y = 300;
@@ -90,7 +97,7 @@ function showAnswerChoices() {
     var str = "";    
     var choices = [];
     for(var i = 0; i < stars.length; i++) {
-        choices[i] = str + "<img class='ans' src='assets/" + stars.getAt(i).key + ".png' /><span class='text' style='padding: 0 10px 0 5px;'>" + stars.getAt(i).answer + "</span>";
+        choices[i] = str + "<div class='answer " + i + "'><img class='ans' src='assets/" + stars.getAt(i).key + ".png' /><span class='text' style='padding: 0 10px 0 5px;'>" + stars.getAt(i).answer + "</span></div>";
     }
     
     document.getElementById("answerChoices").innerHTML = shuffle(choices).join(" ");
@@ -102,13 +109,13 @@ function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
     //  A simple background for our game
-    game.add.sprite(0, 0, 'sky');
+    //game.add.sprite(0, 0, 'sky');
 
     //  Now let's create two ledges
     createPlatforms();
 
     // The player and its settings
-    player = game.add.sprite(32, game.world.height - 150, 'spaceman');
+    player = game.add.sprite(20, game.world.height - 150, 'spaceman');
 
     //  We need to enable physics on the player
     game.physics.arcade.enable(player);
@@ -132,15 +139,15 @@ function create() {
     setQuestion();
 
     //  The score
-    scoreText = game.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#FFF' });
+    scoreText = game.add.text(16, 16, '0', { fontSize: '32px', fill: '#FFF' });
     
     //  The transition between levels (# attempts)
     transText = game.add.text(5, 45, '', { fontSize: '12px', fill: '#FFF' });
     
     //  Game over
-    middleText = game.add.text(300, 300, '', { fontSize: '40px', fill: '#FFF' });
+    middleText = game.add.text(450, 300, '', { fontSize: '40px', fill: '#FFF' });
 
-    //  Our controls.
+    //  Key controls
     cursors = game.input.keyboard.createCursorKeys();    
     spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 }
@@ -221,7 +228,7 @@ function createPlatforms() {
     var ground = platforms.create(0, game.world.height - 64, 'ground');
 
     //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-    ground.scale.setTo(2, 2);
+    ground.scale.setTo(2.5, 2);
 
     //  This stops it from falling away when you jump on it
     ground.body.immovable = true;
@@ -254,9 +261,10 @@ function restartGame() {
     curQ = questions[qPos];
     curA = answers[qPos];
     score = 0;
-    scoreText.text = 'Score: ' + score;
+    scoreText.text = '' + score;
     middleText.text = '';
     transText.text = '';
+    player.position.x = 20;
     
     setQuestion();
     removeAllPlatforms();
@@ -289,6 +297,9 @@ function collectStar (player, star) {
         removeAllStars();
         removeAllPlatforms();
         
+        // Reset spaceman's position
+        player.position.x = 20;
+        
         createAllStars();
         
         createPlatforms();
@@ -303,7 +314,7 @@ function collectStar (player, star) {
         numAttempts++;
     }
     
-    scoreText.text = 'Score: ' + score;
+    scoreText.text = '' + score;
 
 }
 
@@ -311,7 +322,7 @@ function setQuestion() {
     if(curQ === undefined){
         document.getElementById("question").innerHTML = "";   
     } else {
-        document.getElementById("question").innerHTML = "Question: " + curQ;    
+        document.getElementById("question").innerHTML = "<b>Question " + (qPos+1) + "</b><br/> " + curQ;    
     }
 }
 
